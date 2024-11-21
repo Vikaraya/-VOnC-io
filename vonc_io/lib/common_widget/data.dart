@@ -61,22 +61,4 @@ class AppData {
     "assets/img/cevices/Electronic Service  Banner app-min.png",
     "assets/img/cevices/White and Tosca Modern Gadget Repair Service Facebook Post.png",
   ];
-
-  // living essentials all images data
-  static final List<String> LEbImages = [
-    "assets/img/living_essentails/Green Orange Organic Grocery Discount Facebook Cover.png"
-  ];
-
-  static final List<String> LEsIconImages = [
-    "assets/img/living_essentails/fruits_icon-removebg-preview.png",
-    "assets/img/living_essentails/vegetables_icon-removebg-preview.png",
-    "assets/img/living_essentails/meat_ivon-removebg-preview.png",
-    "assets/img/living_essentails/grains_icon-removebg-preview.png",
-  ];
-  static final List<String> ExistingOffersLEbImages = [
-    "assets/img/living_essentails/VOnC LE Chicken.png",
-    "assets/img/living_essentails/VOnC LE EGGS.png",
-    "assets/img/living_essentails/VOnC LE FISH.png",
-    "assets/img/living_essentails/VOnC LE FLESH.png",
-  ];
 }

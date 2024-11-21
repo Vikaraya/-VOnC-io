@@ -1,6 +1,5 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:vonc_io/view/home/curvedappbar.dart';
 import 'package:vonc_io/view/pages/Shopping_cart_page.dart';
 import 'package:vonc_io/view/pages/bell.dart';
 import 'package:vonc_io/view/pages/home_screen.dart';
@@ -44,23 +43,20 @@ class _LivingEssentialsState extends State<LivingEssentials> {
     ),
   ];
 
-  // curved list
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightGreenAccent.shade700,
+      backgroundColor: Colors.green.shade900,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor:
-        Color(0xFF004D40),
+        backgroundColor: Colors.green.shade900,
         title:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Container(
               height: 30,
-              width: 50,
+              width: 60,
               child: Image.asset(
-                "assets/icons/vonc_grocerys_logo.png",
+                "assets/img/V_O_n_C_Logo crop-min.png",
                 fit: BoxFit.cover,
               )),
           Container(

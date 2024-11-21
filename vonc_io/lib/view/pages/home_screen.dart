@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:vonc_io/common_widget/data.dart';
-import 'package:vonc_io/view/home/catogriespage.dart';
 import 'package:vonc_io/view/pages/cervices.dart';
 import 'package:vonc_io/view/pages/food_page.dart';
 import 'package:vonc_io/view/pages/living_Essentials.dart';
@@ -137,29 +136,121 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Container(
-                  height: 200,
-                  margin: EdgeInsets.all(10),
-                  child: Stack(
-                    children: [
-                      _viewType == VeiwType.grid
-                          ? Stack(
-                              children: [
-                                GridView.builder(
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: _CrossAxisCount,
-                                          childAspectRatio: _aspectRatio),
-                                  itemCount:
-                                      AppData.CategoriesStyleImages.length,
-                                  itemBuilder: (context, index) {
-                                    return Stack(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: InkWell(
+            Container(
+                height: MediaQuery.of(context).size.height * 0.30,
+                margin: EdgeInsets.all(10),
+                child: Stack(
+                  children: [
+                    _viewType == VeiwType.grid
+                        ? Stack(
+                            children: [
+                              GridView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: _CrossAxisCount,
+                                        childAspectRatio: _aspectRatio),
+                                itemCount: AppData.CategoriesStyleImages.length,
+                                itemBuilder: (context, index) {
+                                  return Stack(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                                switch (index) {
+                                                  case 0:
+                                                    return const FoodPage();
+                                                  case 1:
+                                                    return const LivingEssentials();
+                                                  case 2:
+                                                    return const LivingGenerals();
+                                                  case 3:
+                                                    return const Cervices();
+                                                  case 4:
+                                                    return const VoncIoScreens();
+                                                  default:
+                                                    return const HomeScreen();
+                                                }
+                                              }),
+                                            );
+                                          },
+                                          child: Center(
+                                            child: Container(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.15,
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  image: AssetImage(AppData
+                                                          .CategoriesStyleImages[
+                                                      index]),
+                                                  fit: BoxFit.fill,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                border: Border.all(
+                                                  width: 3,
+                                                  color: AppData
+                                                      .borderColors[index],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 15.0),
+                                          child: Text(
+                                            AppData.CategoriesText[index],
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 13),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                              Align(
+                                alignment: Alignment.center,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const VoncIoScreens()),
+                                    );
+                                  },
+                                  child: Image.asset(
+                                    "assets/icons/vonc_io_main-removebg-preview.png", // Replace with your image asset
+                                    width: 120,
+                                    height: 120,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Stack(
+                            children: [
+                              ListView.builder(
+                                itemCount: AppData.CategoriesStyleImages.length,
+                                itemBuilder: (context, index) {
+                                  return Stack(
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          InkWell(
                                             onTap: () {
                                               Navigator.push(
                                                 context,
@@ -182,9 +273,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 }),
                                               );
                                             },
-                                            child: Center(
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.vertical,
                                               child: Container(
-                                                height: 100,
+                                                height: 180,
+                                                margin: EdgeInsets.symmetric(
+                                                    vertical: 10),
                                                 decoration: BoxDecoration(
                                                   image: DecorationImage(
                                                     image: AssetImage(AppData
@@ -194,157 +288,58 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ),
                                                   borderRadius:
                                                       BorderRadius.circular(30),
-                                                  border: Border.all(
-                                                    width: 3,
-                                                    color: AppData
-                                                        .borderColors[index],
-                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 15.0),
-                                            child: Text(
-                                              AppData.CategoriesText[index],
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12),
+                                        ],
+                                      ),
+                                      Positioned(
+                                        bottom: 10,
+                                        width: MediaQuery.sizeOf(context).width,
+                                        child: Container(
+                                          color: Colors.transparent,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8, vertical: 4),
+                                          child: Center(
+                                            child: Align(
+                                              alignment: Alignment.bottomCenter,
+                                              child: Text(
+                                                AppData.CategoriesText[index],
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15),
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ],
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const VoncIoScreens()),
                                     );
                                   },
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const VoncIoScreens()),
-                                      );
-                                    },
-                                    child: Image.asset(
-                                      "assets/icons/vonc_io_main-removebg-preview.png", // Replace with your image asset
-                                      width: 110,
-                                      height: 110,
-                                    ),
+                                  child: Image.asset(
+                                    "assets/icons/vonc_io_main-removebg-preview.png", // Replace with your image asset
+                                    width: 100,
+                                    height: 100,
                                   ),
                                 ),
-                              ],
-                            )
-                          : Stack(
-                              children: [
-                                ListView.builder(
-                                  itemCount:
-                                      AppData.CategoriesStyleImages.length,
-                                  itemBuilder: (context, index) {
-                                    return Stack(
-                                      children: [
-                                        Stack(
-                                          children: [
-                                            InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) {
-                                                    switch (index) {
-                                                      case 0:
-                                                        return const FoodPage();
-                                                      case 1:
-                                                        return const LivingEssentials();
-                                                      case 2:
-                                                        return const LivingGenerals();
-                                                      case 3:
-                                                        return const Cervices();
-                                                      case 4:
-                                                        return const VoncIoScreens();
-                                                      default:
-                                                        return const HomeScreen();
-                                                    }
-                                                  }),
-                                                );
-                                              },
-                                              child: SingleChildScrollView(
-                                                scrollDirection: Axis.vertical,
-                                                child: Container(
-                                                  height: 180,
-                                                  margin: EdgeInsets.symmetric(
-                                                      vertical: 10),
-                                                  decoration: BoxDecoration(
-                                                    image: DecorationImage(
-                                                      image: AssetImage(AppData
-                                                              .CategoriesStyleImages[
-                                                          index]),
-                                                      fit: BoxFit.fill,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Positioned(
-                                          bottom: 10,
-                                          width:
-                                              MediaQuery.sizeOf(context).width,
-                                          child: Container(
-                                            color: Colors.transparent,
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8, vertical: 4),
-                                            child: Center(
-                                              child: Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Text(
-                                                  AppData.CategoriesText[index],
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 15),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ),
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const VoncIoScreens()),
-                                      );
-                                    },
-                                    child: Image.asset(
-                                      "assets/icons/vonc_io_main-removebg-preview.png", // Replace with your image asset
-                                      width: 100,
-                                      height: 100,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                    ],
-                  )),
-            ),
+                              ),
+                            ],
+                          ),
+                  ],
+                )),
             SizedBox(
               height: 1,
             ),
@@ -357,7 +352,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 20,
+                  fontSize: 15,
                 ),
               ),
             ),
@@ -429,7 +424,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 20,
+                  fontSize: 15,
                 ),
               ),
             ),
@@ -498,7 +493,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 20,
+                  fontSize: 15,
                 ),
               ),
             ),
@@ -563,7 +558,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 20,
+                  fontSize: 15,
                 ),
               ),
             ),
@@ -666,6 +661,19 @@ class Living_Essentials_home extends StatefulWidget {
 }
 
 class _Living_Essentials_homeState extends State<Living_Essentials_home> {
+  final PageController _controller = PageController();
+  int _currentIndex = 0;
+  List<Widget> _pages = [
+    const Living_Essentials_home(),
+    const Fruits(),
+    const Vegetables(),
+    const Cleaners(),
+    const Sweets(),
+    const Dairy(),
+    const Bakery(),
+    const Meat(),
+  ];
+
   final List<Map<String, dynamic>> categories = [
     {'title': 'All', 'icon': Icons.all_inclusive},
     {'title': 'Fruits', 'icon': Icons.apple_rounded},
@@ -676,201 +684,46 @@ class _Living_Essentials_homeState extends State<Living_Essentials_home> {
     {'title': 'Bakery', 'icon': Icons.bakery_dining},
     {'title': 'Meat', 'icon': Icons.restaurant},
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green.shade800,
+      backgroundColor: Colors.black,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        toolbarHeight: 200,
+        toolbarHeight: 250,
         backgroundColor: Colors.transparent,
         elevation: 0,
         flexibleSpace: ClipPath(
           clipper: AppBarCustomClipper(),
           child: Container(
-            height: 200,
-            width: MediaQuery.sizeOf(context).width,
+            height: 250,
+            width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-              color: Color(0xFF004D40),
-            ),
-            child: Positioned(
-              top: 120,
-              left: 0,
-              right: 0,
-              child: CarouselSlider.builder(
-                options: CarouselOptions(
-                  height: 120,
-                  enlargeCenterPage: true,
-                  viewportFraction: 0.4,
-                  autoPlay: true,
-                  autoPlayInterval: const Duration(seconds: 3),
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.green.shade900,
+                    Colors.green.shade900,
+                  ],
+                  begin: Alignment.bottomLeft,
+                  end: Alignment.bottomRight,
                 ),
-                itemCount: categories.length,
-                itemBuilder: (context, index, realIndex) {
-                  return Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundColor: Colors.orange,
-                        child: Icon(
-                          categories[index]['icon'],
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        categories[index]['title'],
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 10),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
+                image: DecorationImage(
+                  image: AssetImage('assets/img/living_essentails/vonc_Le.png'),
+                  fit: BoxFit.fill,
+                )),
+            // child: Container(
+            //   margin: const EdgeInsets.only(bottom: 80),
+            //   child: Image.asset(
+            //     'assets/img/living_essentails/vonc_Le.png',
+            //     fit: BoxFit.fill,
+            //   ),
+            // ),
           ),
         ),
       ),
-      
     );
   }
-}
-
-// class ProductGrid extends StatelessWidget {
-//   final List<Product> products = [
-//     Product(
-//       name: 'Broccoli(Local Shop)',
-//       image:
-//           'assets/img/living_essentails/broccoli.png', // Replace with actual image path
-//       details: '500 g',
-//       price: 17.295,
-//     ),
-//     Product(
-//       name: 'apple (Local Shop)',
-//       image:
-//           'assets/img/living_essentails/apple.png', // Replace with actual image path
-//       details: '450 g',
-//       price: 14.295,
-//     ),
-//     Product(
-//       name: 'potato (Local Shop)',
-//       image:
-//           'assets/img/living_essentails/potato.png', // Replace with actual image path
-//       details: '1000 g',
-//       price: 27.295,
-//     ),
-//     Product(
-//       name: 'Carrot (Local Carrot)',
-//       image:
-//           'assets/img/living_essentails/carrot.png', // Replace with actual image path
-//       details: '1000 g',
-//       price: 27.295,
-//     ),
-//     Product(
-//       name: 'Carrot (Local Carrot)',
-//       image:
-//           'assets/img/living_essentails/carrot.png', // Replace with actual image path
-//       details: '1000 g',
-//       price: 27.295,
-//     ),
-//     Product(
-//       name: 'Carrot (Local Carrot)',
-//       image:
-//           'assets/img/living_essentails/carrot.png', // Replace with actual image path
-//       details: '1000 g',
-//       price: 27.295,
-//     ),
-//     Product(
-//       name: 'Carrot (Local Carrot)',
-//       image:
-//           'assets/img/living_essentails/carrot.png', // Replace with actual image path
-//       details: '1000 g',
-//       price: 27.295,
-//     ),
-//     Product(
-//       name: 'Carrot (Local Carrot)',
-//       image:
-//           'assets/img/living_essentails/carrot.png', // Replace with actual image path
-//       details: '1000 g',
-//       price: 27.295,
-//     ),
-//     Product(
-//       name: 'Carrot (Local Carrot)',
-//       image:
-//           'assets/img/living_essentails/carrot.png', // Replace with actual image path
-//       details: '1000 g',
-//       price: 27.295,
-//     ),
-//     Product(
-//       name: 'Carrot (Local Carrot)',
-//       image:
-//           'assets/img/living_essentails/carrot.png', // Replace with actual image path
-//       details: '1000 g',
-//       price: 27.295,
-//     ),
-//     Product(
-//       name: 'Carrot (Local Carrot)',
-//       image:
-//           'assets/img/living_essentails/carrot.png', // Replace with actual image path
-//       details: '1000 g',
-//       price: 27.295,
-//     ),
-//     Product(
-//       name: 'Carrot (Local Carrot)',
-//       image:
-//           'assets/img/living_essentails/carrot.png', // Replace with actual image path
-//       details: '1000 g',
-//       price: 27.295,
-//     ),
-//   ];
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.green.shade800,
-//       body: GridView.count(
-//         crossAxisCount: 3, // Number of columns
-//         crossAxisSpacing: 10.0, // Spacing between columns
-//         mainAxisSpacing: 10.0, // Spacing between rows
-
-//         children: products.map((product) {
-//           return Card(
-//             color: Colors.transparent,
-//             child: Column(
-//               children: [
-//                 Image.asset(product.image, height: 40, width: 50),
-//                 Text(product.name),
-//                 Text(product.details),
-//                 Text('₹${product.price.toStringAsFixed(2)}'),
-//                 ElevatedButton(
-//                   onPressed: () {
-//                     // Add to cart logic here
-//                     print('Adding ${product.name} to cart');
-//                   },
-//                   child: Text('Add +'),
-//                 ),
-//               ],
-//             ),
-//           );
-//         }).toList(),
-//       ),
-//     );
-//   }
-// }
-
-class Product {
-  final String name;
-  final String image;
-  final String details;
-  final double price;
-
-  Product({
-    required this.name,
-    required this.image,
-    required this.details,
-    required this.price,
-  });
 }
 
 class AppBarCustomClipper extends CustomClipper<Path> {
@@ -879,7 +732,7 @@ class AppBarCustomClipper extends CustomClipper<Path> {
     double height = size.height;
     double width = size.width;
     var path = Path();
-    path.lineTo(0, height - 50);
+    path.lineTo(0, height - 80);
     path.quadraticBezierTo(width / 2, height, width, height - 80);
     path.lineTo(width, 0);
     path.close();
@@ -889,5 +742,68 @@ class AppBarCustomClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
     return true;
+  }
+}
+
+class Fruits extends StatelessWidget {
+  const Fruits({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+class Vegetables extends StatelessWidget {
+  const Vegetables({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+class Cleaners extends StatelessWidget {
+  const Cleaners({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+class Sweets extends StatelessWidget {
+  const Sweets({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+class Dairy extends StatelessWidget {
+  const Dairy({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+class Meat extends StatelessWidget {
+  const Meat({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+class Bakery extends StatelessWidget {
+  const Bakery({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }
