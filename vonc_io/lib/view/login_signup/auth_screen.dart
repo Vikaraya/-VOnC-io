@@ -670,8 +670,7 @@ class _Email_Password_Verifiction_ScreenState
   final _userIdController = TextEditingController();
   final _passwordController = TextEditingController();
   ApiService get apiService => ApiService(apiUrl);
-  final String apiUrl = 'http://10.0.2.2:8000';
-  String _responseMessage = '';
+  final String apiUrl = 'http://192.168.29.218:8000';
 
   void _SignInsubmit() async {
     String email = _userIdController.text;
@@ -689,10 +688,10 @@ class _Email_Password_Verifiction_ScreenState
           SnackBar(content: Text(response['message'])),
         );
 
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => Dashboard()), // Navigate to the dashboard
-        // );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => PhoneVerification()), // Navigate to the dashboard
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Login failed! Please try again.')),
@@ -720,10 +719,10 @@ class _Email_Password_Verifiction_ScreenState
           SnackBar(content: Text(response['message'])),
         );
 
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => const PhoneVerification()),
-        // );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const PhoneVerification()),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
