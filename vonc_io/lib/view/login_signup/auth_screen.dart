@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:pinput/pinput.dart';
+import 'package:vonc_io/models/api_service.dart';
 import 'package:vonc_io/view/pages/vonc_main_screen.dart';
-
-
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -663,49 +662,79 @@ class _Email_Password_Verifiction_ScreenState
     extends State<Email_Password_Verifiction_Screen> {
   final signInKey = GlobalKey<FormState>();
   final signUpKey = GlobalKey<FormState>();
+  //controllers for signup
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
-  bool _SignInsubmit() {
-    final isValid = signInKey.currentState!.validate();
-    if (isValid) {
-      signInKey.currentState?.save();
+  //controllers for Signin
+  final _userIdController = TextEditingController();
+  final _passwordController = TextEditingController();
+  ApiService get apiService => ApiService(apiUrl);
+  final String apiUrl = 'http://10.0.2.2:8000';
+  String _responseMessage = '';
 
-      // Navigate to the PhoneVerification screen only if the form is valid
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const PhoneVerification()),
-      );
-      return true; // Indicate that the submission was successful
-    } else {
-      // Show a SnackBar only if the form is invalid
+  void _SignInsubmit() async {
+    String email = _userIdController.text;
+    String password = _passwordController.text;
+    print(email + "   email    " + password);
+
+    final apiService = ApiService(apiUrl);
+
+    try {
+      final response = await apiService.loginUser(email, password);
+      print(email + " -> " + password);
+
+      if (response['message'] != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response['message'])),
+        );
+
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => Dashboard()), // Navigate to the dashboard
+        // );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Login failed! Please try again.')),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login failed. Please try again.'),
-        ),
+        SnackBar(content: Text('Error: ${e.toString()}')),
       );
     }
-    return false; // Indicate that the submission failed
   }
 
-  bool _SignUpsubmit() {
-    final isValid = signUpKey.currentState!.validate();
-    if (isValid) {
-      signUpKey.currentState?.save();
+  // ignore: non_constant_identifier_names
+  void _SignUpsubmit() async {
+    String email = emailController.text;
+    String password = passwordController.text;
 
-      // Navigate to the PhoneVerification screen only if the form is valid
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const PhoneVerification()),
-      );
-      return true; // Indicate that the submission was successful
-    } else {
-      // Show a SnackBar only if the form is invalid
+    final apiService = ApiService(apiUrl);
+
+    try {
+      final response = await apiService.register(email, password);
+
+      if (response['message'] != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response['message'])),
+        );
+
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const PhoneVerification()),
+        // );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Registration failed! Please try again.')),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Registration failed. Please try again.'),
-        ),
+        SnackBar(content: Text('Error: ${e.toString()}')),
       );
     }
-    return false; // Indicate that the submission failed
   }
 
   bool _isPasswordVisible = false;
@@ -795,7 +824,7 @@ class _Email_Password_Verifiction_ScreenState
               scrollDirection: Axis.vertical,
               child: Container(
                 width: screenWidth * 0.8,
-                height: screenHeight * 0.572,
+                height: screenHeight * 0.45,
                 decoration: BoxDecoration(
                   color: Colors.black.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(30),
@@ -816,7 +845,7 @@ class _Email_Password_Verifiction_ScreenState
                       ),
                       CircleAvatar(
                         backgroundColor: Colors.transparent,
-                        radius: 65,
+                        radius: 50,
                         child: Center(
                           child: Image.asset(
                             "assets/img/V_O_n_C_Logo crop-min.png",
@@ -832,64 +861,74 @@ class _Email_Password_Verifiction_ScreenState
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                      left: 15,
-                                      right: 15,
+                                      left: 20,
+                                      right: 20,
                                     ),
-                                    child: TextFormField(
-                                      keyboardType: TextInputType.emailAddress,
-                                      validator: (value) {
-                                        if (value!.isEmpty ||
-                                            !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*|+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                                .hasMatch(value)) {
-                                          return " Enter a valid email!";
-                                        }
-                                        return null;
-                                      },
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                      decoration: InputDecoration(
-                                        filled: true,
-                                        fillColor: Colors.grey.shade500,
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
+                                    child: Container(
+                                      height: 35,
+                                      child: TextFormField(
+                                        controller: _userIdController,
+                                        cursorHeight: 25,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        validator: (value) {
+                                          if (value!.isEmpty ||
+                                              !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*|+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                                  .hasMatch(value)) {
+                                            return " Enter a valid email!";
+                                          }
+                                          return null;
+                                        },
+                                        style: const TextStyle(
+                                          color: Colors.black,
                                         ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.grey,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(
+                                              vertical: 6, horizontal: 6),
+                                          filled: true,
+                                          fillColor: Colors.grey.shade500,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
                                           ),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: BorderSide(
-                                              color: Colors.grey.shade900),
-                                        ),
-                                        focusedErrorBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.redAccent,
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.grey,
+                                            ),
                                           ),
-                                        ),
-                                        errorBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.redAccent,
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: BorderSide(
+                                                color: Colors.grey.shade900),
                                           ),
-                                        ),
-                                        hintText: "Email",
-                                        hintStyle: const TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black87,
-                                        ),
-                                        prefixIcon: const Icon(
-                                          Icons.person,
-                                          color: Colors.white,
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.redAccent,
+                                            ),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.redAccent,
+                                            ),
+                                          ),
+                                          hintText: "Email",
+                                          hintStyle: const TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.black87,
+                                          ),
+                                          prefixIcon: const Icon(
+                                            Icons.person,
+                                            color: Colors.white,
+                                            size: 20,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -899,81 +938,90 @@ class _Email_Password_Verifiction_ScreenState
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 15, right: 15),
-                                    child: TextFormField(
-                                      keyboardType:
-                                          TextInputType.visiblePassword,
-                                      validator: (value) {
-                                        RegExp regex = RegExp(
-                                            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$');
-                                        if (value!.isEmpty) {
-                                          return 'Please enter password';
-                                        } else {
-                                          if (!regex.hasMatch(value)) {
-                                            return 'Enter valid password';
+                                        left: 20, right: 20),
+                                    child: Container(
+                                      height: 35,
+                                      child: TextFormField(
+                                        controller: _passwordController,
+                                        keyboardType:
+                                            TextInputType.visiblePassword,
+                                        validator: (value) {
+                                          RegExp regex = RegExp(
+                                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$');
+                                          if (value!.isEmpty) {
+                                            return 'Please enter password';
                                           } else {
-                                            return null;
+                                            if (!regex.hasMatch(value)) {
+                                              return 'Enter valid password';
+                                            } else {
+                                              return null;
+                                            }
                                           }
-                                        }
-                                      },
-                                      obscureText: !_isPasswordVisible,
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                      decoration: InputDecoration(
-                                        filled: true,
-                                        fillColor: Colors.grey.shade500,
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
+                                        },
+                                        obscureText: !_isPasswordVisible,
+                                        style: const TextStyle(
+                                          color: Colors.black,
                                         ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.grey,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(
+                                              vertical: 6, horizontal: 6),
+                                          filled: true,
+                                          fillColor: Colors.grey.shade500,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
                                           ),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: BorderSide(
-                                              color: Colors.grey.shade900),
-                                        ),
-                                        focusedErrorBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.redAccent,
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.grey,
+                                            ),
                                           ),
-                                        ),
-                                        errorBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.redAccent,
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: BorderSide(
+                                                color: Colors.grey.shade900),
                                           ),
-                                        ),
-                                        hintText: "Password",
-                                        hintStyle: const TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black87,
-                                        ),
-                                        prefixIcon: const Icon(
-                                          Icons.key,
-                                          color: Colors.white,
-                                        ),
-                                        suffixIcon: IconButton(
-                                          icon: Icon(_isPasswordVisible
-                                              ? Icons.visibility_off
-                                              : Icons.visibility),
-                                          color: Colors.white,
-                                          onPressed: () {
-                                            setState(() {
-                                              _isPasswordVisible =
-                                                  !_isPasswordVisible;
-                                            });
-                                          },
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.redAccent,
+                                            ),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.redAccent,
+                                            ),
+                                          ),
+                                          hintText: "Password",
+                                          hintStyle: const TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.black87,
+                                          ),
+                                          prefixIcon: const Icon(
+                                            Icons.key,
+                                            color: Colors.white,
+                                            size: 20,
+                                          ),
+                                          suffixIcon: IconButton(
+                                            icon: Icon(_isPasswordVisible
+                                                ? Icons.visibility_off
+                                                : Icons.visibility),
+                                            color: Colors.white,
+                                            iconSize: 20,
+                                            onPressed: () {
+                                              setState(() {
+                                                _isPasswordVisible =
+                                                    !_isPasswordVisible;
+                                              });
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -1010,13 +1058,14 @@ class _Email_Password_Verifiction_ScreenState
                                         ),
                                       )
                                     ],
-                                  ),
+                                  ), // WHEN I HAVE TO IMPLEMENT G AND F AND A I HAVE TO DERUCE SIZE BOX HEIGHT AND INCREACE CONTAINER HEIGHT
                                   const SizedBox(
-                                    height: 10,
+                                    height: 20,
                                   ),
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blueAccent,
+                                      fixedSize: const Size(120, 20),
+                                      backgroundColor: Colors.greenAccent,
                                       //minimumSize: Size(100, 25),
                                     ),
                                     onPressed: () {
@@ -1027,43 +1076,43 @@ class _Email_Password_Verifiction_ScreenState
                                     child: const Text(
                                       "Next  >>",
                                       style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: 15,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white,
                                       ),
                                     ),
                                   ),
                                   const SizedBox(height: 10),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      CircleAvatar(
-                                        child: IconButton(
-                                            onPressed: () {},
-                                            icon: Image.asset(
-                                                "assets/icons/google_logo.png")),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      CircleAvatar(
-                                        child: IconButton(
-                                            onPressed: () {},
-                                            icon: Image.asset(
-                                                "assets/icons/apple_logo.png")),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      CircleAvatar(
-                                        child: IconButton(
-                                          onPressed: () {},
-                                          icon: Image.asset(
-                                              "assets/icons/facebook_logo-removebg-preview.png"),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  // Row(
+                                  //   mainAxisAlignment: MainAxisAlignment.center,
+                                  //   children: [
+                                  //     CircleAvatar(
+                                  //       child: IconButton(
+                                  //           onPressed: () {},
+                                  //           icon: Image.asset(
+                                  //               "assets/icons/google_logo.png")),
+                                  //     ),
+                                  //     const SizedBox(
+                                  //       width: 10,
+                                  //     ),
+                                  //     CircleAvatar(
+                                  //       child: IconButton(
+                                  //           onPressed: () {},
+                                  //           icon: Image.asset(
+                                  //               "assets/icons/apple_logo.png")),
+                                  //     ),
+                                  //     const SizedBox(
+                                  //       width: 10,
+                                  //     ),
+                                  //     CircleAvatar(
+                                  //       child: IconButton(
+                                  //         onPressed: () {},
+                                  //         icon: Image.asset(
+                                  //             "assets/icons/facebook_logo-removebg-preview.png"),
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
                                 ],
                               ),
                             )
@@ -1074,64 +1123,74 @@ class _Email_Password_Verifiction_ScreenState
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                      left: 15,
-                                      right: 15,
+                                      left: 20,
+                                      right: 20,
                                     ),
-                                    child: TextFormField(
-                                      keyboardType: TextInputType.emailAddress,
-                                      validator: (value) {
-                                        if (value!.isEmpty ||
-                                            !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*|+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                                .hasMatch(value)) {
-                                          return " Enter a valid email!";
-                                        }
-                                        return null;
-                                      },
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                      decoration: InputDecoration(
-                                        filled: true,
-                                        fillColor: Colors.grey.shade500,
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
+                                    child: Container(
+                                      height: 35,
+                                      child: TextFormField(
+                                        controller: emailController,
+                                        cursorHeight: 25,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        validator: (value) {
+                                          if (value!.isEmpty ||
+                                              !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*|+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                                  .hasMatch(value)) {
+                                            return " Enter a valid email!";
+                                          }
+                                          return null;
+                                        },
+                                        style: const TextStyle(
+                                          color: Colors.black,
                                         ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.grey,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(
+                                              vertical: 6, horizontal: 6),
+                                          filled: true,
+                                          fillColor: Colors.grey.shade500,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
                                           ),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: BorderSide(
-                                              color: Colors.grey.shade900),
-                                        ),
-                                        focusedErrorBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.redAccent,
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.grey,
+                                            ),
                                           ),
-                                        ),
-                                        errorBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.redAccent,
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: BorderSide(
+                                                color: Colors.grey.shade900),
                                           ),
-                                        ),
-                                        hintText: "Email",
-                                        hintStyle: const TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black87,
-                                        ),
-                                        prefixIcon: const Icon(
-                                          Icons.person,
-                                          color: Colors.white,
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.redAccent,
+                                            ),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.redAccent,
+                                            ),
+                                          ),
+                                          hintText: "Email",
+                                          hintStyle: const TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.black87,
+                                          ),
+                                          prefixIcon: const Icon(
+                                            Icons.person,
+                                            color: Colors.white,
+                                            size: 20,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -1141,81 +1200,90 @@ class _Email_Password_Verifiction_ScreenState
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 15, right: 15),
-                                    child: TextFormField(
-                                      keyboardType:
-                                          TextInputType.visiblePassword,
-                                      validator: (value) {
-                                        RegExp regex = RegExp(
-                                            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$');
-                                        if (value!.isEmpty) {
-                                          return 'Please enter password';
-                                        } else {
-                                          if (!regex.hasMatch(value)) {
-                                            return 'Enter valid password';
+                                        left: 20, right: 20),
+                                    child: Container(
+                                      height: 35,
+                                      child: TextFormField(
+                                        controller: _passwordController,
+                                        cursorHeight: 25,
+                                        keyboardType:
+                                            TextInputType.visiblePassword,
+                                        validator: (value) {
+                                          RegExp regex = RegExp(
+                                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$');
+                                          if (value!.isEmpty) {
+                                            return 'Please enter password';
                                           } else {
-                                            return null;
+                                            if (!regex.hasMatch(value)) {
+                                              return 'Enter valid password';
+                                            } else {
+                                              return null;
+                                            }
                                           }
-                                        }
-                                      },
-                                      obscureText: !_isPasswordVisible,
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                      decoration: InputDecoration(
-                                        filled: true,
-                                        fillColor: Colors.grey.shade500,
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
+                                        },
+                                        obscureText: !_isPasswordVisible,
+                                        style: const TextStyle(
+                                          color: Colors.black,
                                         ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.grey,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(
+                                              vertical: 6, horizontal: 6),
+                                          filled: true,
+                                          fillColor: Colors.grey.shade500,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
                                           ),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: BorderSide(
-                                              color: Colors.grey.shade900),
-                                        ),
-                                        focusedErrorBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.redAccent,
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.grey,
+                                            ),
                                           ),
-                                        ),
-                                        errorBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.redAccent,
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: BorderSide(
+                                                color: Colors.grey.shade900),
                                           ),
-                                        ),
-                                        hintText: "Password",
-                                        hintStyle: const TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black87,
-                                        ),
-                                        prefixIcon: const Icon(
-                                          Icons.key,
-                                          color: Colors.white,
-                                        ),
-                                        suffixIcon: IconButton(
-                                          icon: Icon(_isPasswordVisible
-                                              ? Icons.visibility_off
-                                              : Icons.visibility),
-                                          color: Colors.white,
-                                          onPressed: () {
-                                            setState(() {
-                                              _isPasswordVisible =
-                                                  !_isPasswordVisible;
-                                            });
-                                          },
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.redAccent,
+                                            ),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.redAccent,
+                                            ),
+                                          ),
+                                          hintText: "Password",
+                                          hintStyle: const TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.black87,
+                                          ),
+                                          prefixIcon: const Icon(
+                                            Icons.key,
+                                            color: Colors.white,
+                                          ),
+                                          suffixIcon: IconButton(
+                                            icon: Icon(_isPasswordVisible
+                                                ? Icons.visibility_off
+                                                : Icons.visibility),
+                                            color: Colors.white,
+                                            iconSize: 20,
+                                            onPressed: () {
+                                              setState(() {
+                                                _isPasswordVisible =
+                                                    !_isPasswordVisible;
+                                              });
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -1225,81 +1293,90 @@ class _Email_Password_Verifiction_ScreenState
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 15, right: 15),
-                                    child: TextFormField(
-                                      keyboardType:
-                                          TextInputType.visiblePassword,
-                                      validator: (value) {
-                                        RegExp regex = RegExp(
-                                            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$');
-                                        if (value!.isEmpty) {
-                                          return 'Please enter password';
-                                        } else {
-                                          if (!regex.hasMatch(value)) {
-                                            return ' password not same';
+                                        left: 20, right: 20),
+                                    child: Container(
+                                      height: 35,
+                                      child: TextFormField(
+                                        controller: passwordController,
+                                        cursorHeight: 25,
+                                        keyboardType:
+                                            TextInputType.visiblePassword,
+                                        validator: (value) {
+                                          RegExp regex = RegExp(
+                                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$');
+                                          if (value!.isEmpty) {
+                                            return 'Please enter password';
                                           } else {
-                                            return null;
+                                            if (!regex.hasMatch(value)) {
+                                              return ' password not same';
+                                            } else {
+                                              return null;
+                                            }
                                           }
-                                        }
-                                      },
-                                      obscureText: !_isPasswordVisible,
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                      decoration: InputDecoration(
-                                        filled: true,
-                                        fillColor: Colors.grey.shade500,
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
+                                        },
+                                        obscureText: !_isPasswordVisible,
+                                        style: const TextStyle(
+                                          color: Colors.black,
                                         ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.grey,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(
+                                              vertical: 6, horizontal: 6),
+                                          filled: true,
+                                          fillColor: Colors.grey.shade500,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
                                           ),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: BorderSide(
-                                              color: Colors.grey.shade900),
-                                        ),
-                                        focusedErrorBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.redAccent,
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.grey,
+                                            ),
                                           ),
-                                        ),
-                                        errorBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: const BorderSide(
-                                            color: Colors.redAccent,
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: BorderSide(
+                                                color: Colors.grey.shade900),
                                           ),
-                                        ),
-                                        hintText: "Confirm Password",
-                                        hintStyle: const TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black87,
-                                        ),
-                                        prefixIcon: const Icon(
-                                          Icons.key,
-                                          color: Colors.white,
-                                        ),
-                                        suffixIcon: IconButton(
-                                          icon: Icon(_isPasswordVisible
-                                              ? Icons.visibility_off
-                                              : Icons.visibility),
-                                          color: Colors.white,
-                                          onPressed: () {
-                                            setState(() {
-                                              _isPasswordVisible =
-                                                  !_isPasswordVisible;
-                                            });
-                                          },
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.redAccent,
+                                            ),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.redAccent,
+                                            ),
+                                          ),
+                                          hintText: "Confirm Password",
+                                          hintStyle: const TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.black87,
+                                          ),
+                                          prefixIcon: const Icon(
+                                            Icons.key,
+                                            color: Colors.white,
+                                          ),
+                                          suffixIcon: IconButton(
+                                            icon: Icon(_isPasswordVisible
+                                                ? Icons.visibility_off
+                                                : Icons.visibility),
+                                            color: Colors.white,
+                                            iconSize: 20,
+                                            onPressed: () {
+                                              setState(() {
+                                                _isPasswordVisible =
+                                                    !_isPasswordVisible;
+                                              });
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -1322,13 +1399,11 @@ class _Email_Password_Verifiction_ScreenState
                                   ),
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blueAccent,
+                                      backgroundColor: Colors.greenAccent,
                                       //minimumSize: Size(100, 25),
                                     ),
                                     onPressed: () {
-                                      setState(() {
-                                        _SignUpsubmit();
-                                      });
+                                      _SignUpsubmit();
                                     },
                                     child: const Text(
                                       "Next  >>",
