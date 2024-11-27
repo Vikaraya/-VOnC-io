@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 //import 'package:vonc/view/pages/living_generals.dart';
 //import 'package:vonc/view/pages/offers_page.dart';
 
-import 'package:vonc_io/view/login_signup/auth_screen.dart';
 import 'package:vonc_io/view/pages/vonc_main_screen.dart';
 
 class VoncSplashView extends StatefulWidget {
@@ -27,7 +26,7 @@ class _VoncSplashViewState extends State<VoncSplashView> {
         splash: Image.asset("assets/videos/gif/VOnC ss.gif"),
         splashIconSize: 2000.0,
         centered: true,
-        nextScreen: const AuthScreen(),
+        nextScreen: const VoncMainScreen(),
         backgroundColor: Colors.black,
         duration: 1100,
       ),

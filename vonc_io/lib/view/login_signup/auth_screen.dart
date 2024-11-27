@@ -348,7 +348,7 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   final otpController = TextEditingController();
-  final OtpKey = GlobalKey<FormState>();
+  final otpkey = GlobalKey<FormState>();
 
   final String apiUrl = 'http://192.168.29.218:8000';
   ApiService get apiService => ApiService(apiUrl);
@@ -359,7 +359,7 @@ class _OtpScreenState extends State<OtpScreen> {
       final response = await apiService.validateOtp(widget.phoneNumber, otp);
 
       // Check if the response contains a valid message
-      if (response != null && response['message'] != null) {
+      if (response['message'] != null) {
         // Show the message from the response
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(response['message'])),
@@ -538,7 +538,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Form(
-                          key: OtpKey,
+                          key: otpkey,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -658,7 +658,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                     //minimumSize: Size(100, 25),
                                   ),
                                   onPressed: () async {
-                                    if (OtpKey.currentState!.validate()) {
+                                    if (otpkey.currentState!.validate()) {
                                       String validOtp =
                                           otpController.text.trim();
                                       if (validOtp.isEmpty) {
