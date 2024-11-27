@@ -32,6 +32,30 @@ class _PhoneVerificationState extends State<PhoneVerification> {
   final phoneKey = GlobalKey<FormState>();
   TextEditingController phoneController = TextEditingController();
 
+  final String apiUrl = 'http://192.168.29.218:8000';
+  ApiService get apiService => ApiService(apiUrl);
+
+  void verifyPhone() async {
+    try {
+      final response = await apiService.registerphn(phoneController.text);
+      if (response['message'] != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response['message'])),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Registration failed! Please try again.')),
+        );
+      }
+    } catch (e) {
+      // Handle exceptions (e.g., network issues or unexpected errors)
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('exception to register: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -221,6 +245,10 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                                                       'Please enter a valid phone number')));
                                           return;
                                         }
+
+                                        //calling verifyPhone() after a valid phone number is entered
+                                        // verifyPhone();
+
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -321,6 +349,42 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
   final otpController = TextEditingController();
   final OtpKey = GlobalKey<FormState>();
+
+  final String apiUrl = 'http://192.168.29.218:8000';
+  ApiService get apiService => ApiService(apiUrl);
+
+  Future<bool> verifyOtp(String otp) async {
+    try {
+      // Ensure phone number and OTP are included in the API call
+      final response = await apiService.validateOtp(widget.phoneNumber, otp);
+
+      // Check if the response contains a valid message
+      if (response != null && response['message'] != null) {
+        // Show the message from the response
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response['message'])),
+        );
+
+        if (response['message'] == "OTP validated successfully") {
+          // Assuming `status` indicates success
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Invalid response from server")),
+        );
+        return false;
+      }
+    } catch (e) {
+      // Handle exceptions such as network issues
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Exception occurred: $e")),
+      );
+      return false;
+    }
+  }
 
   String _obscurePhoneNumber(String phoneNumber) {
     //return phoneNumber.replaceRange(0,phoneNumber.length - 2, '*');
@@ -593,7 +657,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                     backgroundColor: Colors.blueAccent,
                                     //minimumSize: Size(100, 25),
                                   ),
-                                  onPressed: () {
+                                  onPressed: () async {
                                     if (OtpKey.currentState!.validate()) {
                                       String validOtp =
                                           otpController.text.trim();
@@ -604,17 +668,27 @@ class _OtpScreenState extends State<OtpScreen> {
                                         ));
                                         return;
                                       }
-
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
+                                      // Call verifyOtp() here before navigation
+                                      bool isOtpValid = await verifyOtp(validOtp); // Assuming verifyOtp is asynchronous
+                                      if (isOtpValid) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
                                             builder: (context) =>
-                                                const VoncMainScreen()),
-                                      );
+                                                const VoncMainScreen(),
+                                          ),
+                                        );
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                          content: Text(
+                                              "OTP verification failed. Please try again."),
+                                        ));
+                                      }
                                     } else {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(const SnackBar(
-                                        content: Text("Invalid  Otp"),
+                                        content: Text("Invalid Otp"),
                                       ));
                                     }
                                   },
@@ -690,7 +764,9 @@ class _Email_Password_Verifiction_ScreenState
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => PhoneVerification()), // Navigate to the dashboard
+          MaterialPageRoute(
+              builder: (context) =>
+                  PhoneVerification()), // Navigate to the dashboard
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

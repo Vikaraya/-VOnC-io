@@ -44,4 +44,42 @@ class ApiService {
       rethrow;
     }
   }
+
+  Future<Map<String, dynamic>> registerphn(String phoneNumber ) async {
+    final response = await http.post(
+      Uri.parse('$apiUrl/send-otp'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'phnno': phoneNumber}),
+    );
+
+    try {
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception(
+            "Failed to register: ${response.body}"); 
+      }
+    } catch (e) {
+      throw Exception('Failed to register: $e'); 
+    }
+  }
+
+  Future<Map<String, dynamic>> validateOtp(String phoneNumber, String otp) async {
+    final response = await http.post(
+      Uri.parse('$apiUrl/validate-otp'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'phnno': otp}),
+    );
+
+    try {
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body); 
+      } else {
+        throw Exception(
+            "Failed to register: ${response.body}"); 
+      }
+    } catch (e) {
+      throw Exception('Failed to register: $e');
+    }
+  }
 }
