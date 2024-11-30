@@ -350,7 +350,7 @@ class _OtpScreenState extends State<OtpScreen> {
   final otpController = TextEditingController();
   final otpkey = GlobalKey<FormState>();
 
-  final String apiUrl = 'http://192.168.29.218:8000';
+  final String apiUrl = 'http://192.168.99.69:8000';
   ApiService get apiService => ApiService(apiUrl);
 
   Future<bool> verifyOtp(String otp) async {
@@ -744,7 +744,7 @@ class _Email_Password_Verifiction_ScreenState
   final _userIdController = TextEditingController();
   final _passwordController = TextEditingController();
   ApiService get apiService => ApiService(apiUrl);
-  final String apiUrl = 'http://192.168.29.218:8000';
+  final String apiUrl = 'http://192.168.99.69:8000';
 
   void _SignInsubmit() async {
     String email = _userIdController.text;

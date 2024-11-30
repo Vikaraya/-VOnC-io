@@ -61,4 +61,32 @@ class AppData {
     "assets/img/cevices/Electronic Service  Banner app-min.png",
     "assets/img/cevices/White and Tosca Modern Gadget Repair Service Facebook Post.png",
   ];
+
+  // living essentails
+
+  static final List<String> LEBannerCategoriesStyleImages = [
+    "assets/img/living_essentails/vonc_le_f_banner.png",
+    "assets/img/living_essentails/vonc_le_ vegetables banners.png",
+    "assets/img/living_essentails/vonc-ie_le_ Meat banner.png",
+    "assets/img/living_essentails/Vonc_le_Grains_banner.png",
+  ];
+  static final List<String> LECategoriesStyleImages = [
+    "assets/img/living_essentails/fruits_icon-removebg-preview.png",
+    "assets/img/living_essentails/vegetables_icon-removebg-preview.png",
+    "assets/img/living_essentails/meat_ivon-removebg-preview.png",
+    "assets/img/living_essentails/grains_icon_img-removebg-preview.png",
+  ];
+
+  static final List<String> LECategoriesText = [
+    "Fruits",
+    "vegetables",
+    "Meat",
+    "Grains",
+  ];
+  static final List<Color> LEborderColors = [
+    Color(0xFF00bf63),
+    Color(0xFF00bf63),
+    Color(0xFF00bf63),
+    Color(0xFF00bf63),
+  ];
 }

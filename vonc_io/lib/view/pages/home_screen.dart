@@ -91,53 +91,53 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 1,
             ),
-            Container(
-              height: 30,
-              color: Color(0xFF212325),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    child: Text(
-                      "   Categories",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                      ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: Text(
+                    "   Categories",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        if (_viewType == VeiwType.list) {
-                          _CrossAxisCount = 2;
-                          _aspectRatio = 1.5;
-                          _viewType = VeiwType.grid;
-                        } else {
-                          _CrossAxisCount = 1;
-                          _aspectRatio = 5;
-                          _viewType = VeiwType.list;
-                        }
-                      });
-                    },
-                    icon: _viewType == VeiwType.grid
-                        ? SizedBox(
-                            width: 80,
-                            height: 80,
-                            child: Image.asset(
-                              "assets/icons/cateogrie_icon-removebg-preview.png",
-                              height: 80,
-                              width: 80,
-                            ),
-                          )
-                        : Icon(Icons.view_list_outlined, color: Colors.white),
-                  ),
-                ],
-              ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      if (_viewType == VeiwType.list) {
+                        _CrossAxisCount = 2;
+                        _aspectRatio = 1.5;
+                        _viewType = VeiwType.grid;
+                      } else {
+                        _CrossAxisCount = 1;
+                        _aspectRatio = 5;
+                        _viewType = VeiwType.list;
+                      }
+                    });
+                  },
+                  icon: _viewType == VeiwType.grid
+                      ? SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Image.asset(
+                            "assets/icons/cateogrie_icon-removebg-preview.png",
+                            height: 40,
+                            width: 40,
+                          ),
+                        )
+                      : Icon(
+                          Icons.list,
+                          color: Colors.white,
+                          size: 40,
+                        ),
+                ),
+              ],
             ),
             Container(
-                height: MediaQuery.of(context).size.height * 0.30,
+                height: MediaQuery.of(context).size.height * 0.3,
                 margin: EdgeInsets.all(10),
                 child: Stack(
                   children: [
@@ -184,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height *
-                                                  0.15,
+                                                  0.138,
                                               decoration: BoxDecoration(
                                                 image: DecorationImage(
                                                   image: AssetImage(AppData
@@ -234,8 +234,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                   child: Image.asset(
                                     "assets/icons/vonc_io_main-removebg-preview.png", // Replace with your image asset
-                                    width: 120,
-                                    height: 120,
+                                    width: 130,
+                                    height: 130,
                                   ),
                                 ),
                               ),
@@ -344,9 +344,8 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 1,
             ),
             Container(
-              height: 30,
+              height: 20,
               width: MediaQuery.sizeOf(context).width,
-              color: Color(0xFF212325),
               child: Text(
                 " Foods",
                 style: TextStyle(
@@ -416,9 +415,8 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 1,
             ),
             Container(
-              height: 30,
+              height: 20,
               width: MediaQuery.sizeOf(context).width,
-              color: Color(0xFF212325),
               child: Text(
                 " Living Essentails",
                 style: TextStyle(
@@ -485,9 +483,8 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 1,
             ),
             Container(
-              height: 30,
+              height: 20,
               width: MediaQuery.sizeOf(context).width,
-              color: Color(0xFF212325),
               child: Text(
                 " Living Generals",
                 style: TextStyle(
@@ -550,9 +547,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Container(
-              height: 30,
+              height: 20,
               width: MediaQuery.sizeOf(context).width,
-              color: Color(0xFF212325),
               child: Text(
                 " Cevices",
                 style: TextStyle(
@@ -652,158 +648,3 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 enum VeiwType { grid, list }
-
-class Living_Essentials_home extends StatefulWidget {
-  const Living_Essentials_home({super.key});
-
-  @override
-  State<Living_Essentials_home> createState() => _Living_Essentials_homeState();
-}
-
-class _Living_Essentials_homeState extends State<Living_Essentials_home> {
-  final PageController _controller = PageController();
-  int _currentIndex = 0;
-  List<Widget> _pages = [
-    const Living_Essentials_home(),
-    const Fruits(),
-    const Vegetables(),
-    const Cleaners(),
-    const Sweets(),
-    const Dairy(),
-    const Bakery(),
-    const Meat(),
-  ];
-
-  final List<Map<String, dynamic>> categories = [
-    {'title': 'All', 'icon': Icons.all_inclusive},
-    {'title': 'Fruits', 'icon': Icons.apple_rounded},
-    {'title': 'Vegetables', 'icon': Icons.crop_landscape},
-    {'title': 'Cleaners', 'icon': Icons.cleaning_services},
-    {'title': 'Sweets', 'icon': Icons.cake},
-    {'title': 'Dairy', 'icon': Icons.local_drink},
-    {'title': 'Bakery', 'icon': Icons.bakery_dining},
-    {'title': 'Meat', 'icon': Icons.restaurant},
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        toolbarHeight: 250,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        flexibleSpace: ClipPath(
-          clipper: AppBarCustomClipper(),
-          child: Container(
-            height: 250,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.green.shade900,
-                    Colors.green.shade900,
-                  ],
-                  begin: Alignment.bottomLeft,
-                  end: Alignment.bottomRight,
-                ),
-                image: DecorationImage(
-                  image: AssetImage('assets/img/living_essentails/vonc_Le.png'),
-                  fit: BoxFit.fill,
-                )),
-            // child: Container(
-            //   margin: const EdgeInsets.only(bottom: 80),
-            //   child: Image.asset(
-            //     'assets/img/living_essentails/vonc_Le.png',
-            //     fit: BoxFit.fill,
-            //   ),
-            // ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class AppBarCustomClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    double height = size.height;
-    double width = size.width;
-    var path = Path();
-    path.lineTo(0, height - 80);
-    path.quadraticBezierTo(width / 2, height, width, height - 80);
-    path.lineTo(width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return true;
-  }
-}
-
-class Fruits extends StatelessWidget {
-  const Fruits({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
-class Vegetables extends StatelessWidget {
-  const Vegetables({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
-class Cleaners extends StatelessWidget {
-  const Cleaners({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
-class Sweets extends StatelessWidget {
-  const Sweets({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
-class Dairy extends StatelessWidget {
-  const Dairy({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
-class Meat extends StatelessWidget {
-  const Meat({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
-class Bakery extends StatelessWidget {
-  const Bakery({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}

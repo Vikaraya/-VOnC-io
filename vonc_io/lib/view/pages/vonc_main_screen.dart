@@ -66,11 +66,11 @@ class _VoncMainScreenState extends State<VoncMainScreen> {
               borderRadius: BorderRadius.circular(0),
               gradient: LinearGradient(
                 colors: [
-                  Color(0xff000000),
                   Color(0xff3533cd),
+                  Color(0xff000000),
                 ],
-                begin: Alignment.bottomLeft,
-                end: Alignment.bottomRight,
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
           ),
