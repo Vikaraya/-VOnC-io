@@ -54,127 +54,125 @@ class _VoncMainScreenState extends State<VoncMainScreen> {
   //final TextEditingController _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.black,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.black,
-          flexibleSpace: Container(
-            height: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(0),
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xff3533cd),
-                  Color(0xff000000),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+        flexibleSpace: Container(
+          height: 100,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(0),
+            gradient: LinearGradient(
+              colors: [
+                Color(0xff3533cd),
+                Color(0xff000000),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Image.asset(
-                "assets/img/V_O_n_C_Logo crop-min.png",
-                height: 30,
-                width: 50,
-              ),
-              const SizedBox(
-                width: 2,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.542,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade900.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: TextFormField(
-                    cursorHeight: 25,
-                    onChanged: (value) {},
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white, width: 2),
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                      ),
-                      hintText: '',
-                      hintStyle: const TextStyle(color: Colors.white),
-                      prefixIcon: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.search,
-                            color: Colors.white,
-                          )),
-                      suffixIcon: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.mic,
-                            color: Colors.white,
-                          )),
-                    ),
-                    style: const TextStyle(color: Colors.white, fontSize: 30)),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Bell()),
-                  );
-                },
-                child: Icon(Icons.notifications_outlined,
-                    color: Colors.white, size: 30),
-              ),
-              const SizedBox(
-                width: 2,
-              ),
-              Image.asset(
-                "assets/icons/vonc wathsapp logo crop.png",
-                height: 25,
-                width: 25,
-                fit: BoxFit.cover,
-              ),
-            ],
-          ),
         ),
-        bottomNavigationBar: CurvedNavigationBar(
-            height: 50,
-            backgroundColor: Colors.transparent,
-            color: Colors.indigoAccent,
-            index: _currentIndex,
-            onTap: (index) {
-              switch (index) {
-                case 0:
-                  setState(() {
-                    _currentIndex = 0;
-                  });
-                  break;
-                case 1:
-                  setState(() {
-                    _currentIndex = 1;
-                  });
-                  break;
-                case 2:
-                  setState(() {
-                    _currentIndex = 2;
-                  });
-                  break;
-                case 3:
-                  setState(() {
-                    _currentIndex = 3;
-                  });
-                  break;
-                case 4:
-                  setState(() {
-                    _currentIndex = 4;
-                  });
-              }
-            },
-            items: _navigationItem),
-        body: _screens[_currentIndex],
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.asset(
+              "assets/img/V_O_n_C_Logo crop-min.png",
+              height: 30,
+              width: 50,
+            ),
+            const SizedBox(
+              width: 2,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.542,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade900.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: TextFormField(
+                  cursorHeight: 25,
+                  onChanged: (value) {},
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 2),
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                    ),
+                    hintText: '',
+                    hintStyle: const TextStyle(color: Colors.white),
+                    prefixIcon: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.search,
+                          color: Colors.white,
+                        )),
+                    suffixIcon: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.mic,
+                          color: Colors.white,
+                        )),
+                  ),
+                  style: const TextStyle(color: Colors.white, fontSize: 30)),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Bell()),
+                );
+              },
+              child: Icon(Icons.notifications_outlined,
+                  color: Colors.white, size: 30),
+            ),
+            const SizedBox(
+              width: 2,
+            ),
+            Image.asset(
+              "assets/icons/vonc wathsapp logo crop.png",
+              height: 25,
+              width: 25,
+              fit: BoxFit.cover,
+            ),
+          ],
+        ),
       ),
+      bottomNavigationBar: CurvedNavigationBar(
+          height: 50,
+          backgroundColor: Colors.transparent,
+          color: Colors.indigoAccent,
+          index: _currentIndex,
+          onTap: (index) {
+            switch (index) {
+              case 0:
+                setState(() {
+                  _currentIndex = 0;
+                });
+                break;
+              case 1:
+                setState(() {
+                  _currentIndex = 1;
+                });
+                break;
+              case 2:
+                setState(() {
+                  _currentIndex = 2;
+                });
+                break;
+              case 3:
+                setState(() {
+                  _currentIndex = 3;
+                });
+                break;
+              case 4:
+                setState(() {
+                  _currentIndex = 4;
+                });
+            }
+          },
+          items: _navigationItem),
+      body: _screens[_currentIndex],
     );
   }
 }

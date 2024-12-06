@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:pinput/pinput.dart';
 import 'package:vonc_io/models/api_service.dart';
+import 'package:vonc_io/view/login_signup/auth2_fs.dart';
 import 'package:vonc_io/view/pages/vonc_main_screen.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -669,7 +670,8 @@ class _OtpScreenState extends State<OtpScreen> {
                                         return;
                                       }
                                       // Call verifyOtp() here before navigation
-                                      bool isOtpValid = await verifyOtp(validOtp); // Assuming verifyOtp is asynchronous
+                                      bool isOtpValid = await verifyOtp(
+                                          validOtp); // Assuming verifyOtp is asynchronous
                                       if (isOtpValid) {
                                         Navigator.push(
                                           context,
@@ -736,84 +738,169 @@ class _Email_Password_Verifiction_ScreenState
     extends State<Email_Password_Verifiction_Screen> {
   final signInKey = GlobalKey<FormState>();
   final signUpKey = GlobalKey<FormState>();
+  bool isLoading = false;
   //controllers for signup
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   //controllers for Signin
   final _userIdController = TextEditingController();
   final _passwordController = TextEditingController();
-  ApiService get apiService => ApiService(apiUrl);
-  final String apiUrl = 'http://192.168.99.69:8000';
+  // ApiService get apiService => ApiService(apiUrl);
+  // final String apiUrl = 'http://192.168.99.69:8000';
 
-  void _SignInsubmit() async {
-    String email = _userIdController.text;
-    String password = _passwordController.text;
-    print(email + "   email    " + password);
+  // void _SignInsubmit() async {
+  //   String email = _userIdController.text;
+  //   String password = _passwordController.text;
+  //   print(email + "   email    " + password);
 
-    final apiService = ApiService(apiUrl);
+  //   final apiService = ApiService(apiUrl);
 
-    try {
-      final response = await apiService.loginUser(email, password);
-      print(email + " -> " + password);
+  //   try {
+  //     final response = await apiService.loginUser(email, password);
+  //     print(email + " -> " + password);
 
-      if (response['message'] != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response['message'])),
-        );
+  //     if (response['message'] != null) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text(response['message'])),
+  //       );
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  PhoneVerification()), // Navigate to the dashboard
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Login failed! Please try again.')),
-        );
-      }
-    } catch (e) {
+  //       Navigator.pushReplacement(
+  //         context,
+  //         MaterialPageRoute(
+  //             builder: (context) =>
+  //                 PhoneVerification()), // Navigate to the dashboard
+  //       );
+  //     } else {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(content: Text('Login failed! Please try again.')),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Error: ${e.toString()}')),
+  //     );
+  //   }
+  // }
+
+  // // ignore: non_constant_identifier_names
+  // void _SignUpsubmit() async {
+  //   String email = emailController.text;
+  //   String password = passwordController.text;
+
+  //   final apiService = ApiService(apiUrl);
+
+  //   try {
+  //     final response = await apiService.register(email, password);
+
+  //     if (response['message'] != null) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text(response['message'])),
+  //       );
+
+  //       Navigator.pushReplacement(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => const PhoneVerification()),
+  //       );
+  //     } else {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //             content: Text('Registration failed! Please try again.')),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Error: ${e.toString()}')),
+  //     );
+  //   }
+  // }
+  void signIn() async {
+    // Validate input
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
+        SnackBar(content: Text("Please enter both email and password")),
       );
+      return;
     }
-  }
-
-  // ignore: non_constant_identifier_names
-  void _SignUpsubmit() async {
-    String email = emailController.text;
-    String password = passwordController.text;
-
-    final apiService = ApiService(apiUrl);
 
     try {
-      final response = await apiService.register(email, password);
+      String res = await AuthenticationService().signIn(
+        email: emailController.text,
+        password: passwordController.text,
+        authService: AuthenticationService(),
+      );
 
-      if (response['message'] != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response['message'])),
-        );
-
+      if (res == "success") {
+        setState(() {
+          isLoading = true;
+        });
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const PhoneVerification()),
         );
       } else {
+        setState(() {
+          isLoading = false;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Registration failed! Please try again.')),
+          SnackBar(content: Text(res)),
         );
       }
     } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
+        SnackBar(content: Text("An error occurred: $e")),
+      );
+    }
+  }
+
+  void signUp() async {
+    try {
+      String res = await AuthenticationService().signUp(
+        email: emailController.text,
+        password: passwordController.text,
+        confirmPassword: passwordController.text,
+        authService: AuthenticationService(),
+      );
+
+      print("Sign Up Response: $res"); // Debugging output
+
+      if (res == "success") {
+        setState(() {
+          isLoading = true; // Optionally show a loading indicator
+        });
+
+        print("Navigating to PhoneVerification..."); // Debugging output
+
+        // Navigate to the next screen
+        await Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const PhoneVerification()),
+        );
+      } else {
+        setState(() {
+          isLoading = false; // Hide loading indicator
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(res)), // Show error message
+        );
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false; // Hide loading indicator
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("An error occurred: $e")), // Show error message
       );
     }
   }
 
   bool _isPasswordVisible = false;
   bool _isLoginEnabled = true;
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -1145,7 +1232,7 @@ class _Email_Password_Verifiction_ScreenState
                                     ),
                                     onPressed: () {
                                       setState(() {
-                                        _SignInsubmit();
+                                        signIn();
                                       });
                                     },
                                     child: const Text(
@@ -1478,7 +1565,7 @@ class _Email_Password_Verifiction_ScreenState
                                       //minimumSize: Size(100, 25),
                                     ),
                                     onPressed: () {
-                                      _SignUpsubmit();
+                                      signUp();
                                     },
                                     child: const Text(
                                       "Next  >>",

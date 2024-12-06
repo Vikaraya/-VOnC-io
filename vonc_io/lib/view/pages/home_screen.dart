@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             SizedBox(
-              height: 150,
+              height: 250,
               child: CarouselSlider(
                 items: List.generate(
                   AppData.CategoriesStyleImages.length,
@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       )),
                     );
                   },
-                ),
+                ).toList(),
                 options: CarouselOptions(
                   height: 200,
                   aspectRatio: _aspectRatio,
@@ -137,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             Container(
-                height: MediaQuery.of(context).size.height * 0.3,
+                height: MediaQuery.of(context).size.height * 0.35,
                 margin: EdgeInsets.all(10),
                 child: Stack(
                   children: [
@@ -184,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height *
-                                                  0.138,
+                                                  0.140,
                                               decoration: BoxDecoration(
                                                 image: DecorationImage(
                                                   image: AssetImage(AppData
@@ -223,19 +223,27 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               Align(
                                 alignment: Alignment.center,
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const VoncIoScreens()),
-                                    );
-                                  },
-                                  child: Image.asset(
-                                    "assets/icons/vonc_io_main-removebg-preview.png", // Replace with your image asset
-                                    width: 130,
-                                    height: 130,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: CircleAvatar(
+                                    child: IconButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                              return const VoncIoScreens();
+                                            }),
+                                          );
+                                        },
+                                        icon: Image.asset(
+                                          "assets/icons/vonc_io_main-removebg-preview edited.png",
+                                          fit: BoxFit.cover,
+                                        )),
+                                    backgroundColor: Colors.transparent,
+                                    radius: 60,
                                   ),
                                 ),
                               ),
@@ -329,10 +337,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                               const VoncIoScreens()),
                                     );
                                   },
-                                  child: Image.asset(
-                                    "assets/icons/vonc_io_main-removebg-preview.png", // Replace with your image asset
-                                    width: 100,
-                                    height: 100,
+                                  child: CircleAvatar(
+                                    radius: 60,
+                                    backgroundColor: Colors.transparent,
+                                    child: Image.asset(
+                                      "assets/icons/vonc_io_main-removebg-preview edited.png",
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),

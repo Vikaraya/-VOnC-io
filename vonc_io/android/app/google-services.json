@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "352031234862",
+    "project_id": "vonc-ie",
+    "storage_bucket": "vonc-ie.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:352031234862:android:0974c19aadd55428f5f8bf",
+        "android_client_info": {
+          "package_name": "com.example.vonc_io"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2ostyBvx18wrVKOKEnL7onQd2NLti818"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

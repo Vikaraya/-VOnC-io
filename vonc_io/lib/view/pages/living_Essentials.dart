@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,7 @@ import 'package:vonc_io/view/pages/offers_page.dart';
 import 'package:vonc_io/view/pages/payment_page.dart';
 import 'package:vonc_io/view/pages/user_settings.dart';
 import 'package:vonc_io/view/pages/vonc_io_screens.dart';
+import 'package:vonc_io/view/pages/vonc_main_screen.dart';
 
 class LivingEssentials extends StatefulWidget {
   const LivingEssentials({super.key});
@@ -22,6 +25,7 @@ class LivingEssentials extends StatefulWidget {
 
 class _LivingEssentialsState extends State<LivingEssentials> {
   int _currentIndex = 0;
+  Timer? _doubleTapTimer;
   final List<Widget> _screens = [
     const Living_Essentials_home(),
     const Living_Essentials_Favourite(),
@@ -30,25 +34,43 @@ class _LivingEssentialsState extends State<LivingEssentials> {
     const UserSettings(),
   ];
 
-  final List<Widget> _navigationItem = [
-    const Icon(
-      Icons.home,
-      color: Colors.white,
-    ),
-    const Icon(Icons.favorite, color: Colors.white),
-    const Icon(
-      Icons.qr_code_scanner_rounded,
-      color: Colors.white,
-    ),
-    const Icon(
-      Icons.shopping_cart,
-      color: Colors.white,
-    ),
-    const Icon(
-      Icons.person,
-      color: Colors.white,
-    ),
-  ];
+  late List<Widget> _navigationItem;
+
+  @override
+  void initState() {
+    super.initState();
+    _navigationItem = [
+      GestureDetector(
+        onDoubleTap: () {
+          _navigateTOMainScreen();
+        },
+        child: Icon(
+          Icons.home,
+          color: Colors.white,
+        ),
+      ),
+      const Icon(Icons.favorite, color: Colors.white),
+      const Icon(
+        Icons.qr_code_scanner_rounded,
+        color: Colors.white,
+      ),
+      const Icon(
+        Icons.shopping_cart,
+        color: Colors.white,
+      ),
+      const Icon(
+        Icons.person,
+        color: Colors.white,
+      ),
+    ];
+  }
+
+  void _navigateTOMainScreen() {
+    Navigator.pop(
+      context,
+      MaterialPageRoute(builder: (context) => const VoncMainScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,11 +155,20 @@ class _LivingEssentialsState extends State<LivingEssentials> {
           color: Color(0xff4cd21d),
           index: _currentIndex,
           onTap: (index) {
+            _doubleTapTimer?.cancel();
             switch (index) {
               case 0:
-                setState(() {
-                  _currentIndex = 0;
-                });
+                if (_currentIndex == 0) {
+                  _doubleTapTimer =
+                      Timer(const Duration(milliseconds: 300), () {
+                    setState(() {
+                      _navigateTOMainScreen();
+                    });
+                  });
+                } else
+                  setState(() {
+                    _currentIndex = 0;
+                  });
                 break;
               case 1:
                 setState(() {
@@ -334,15 +365,16 @@ class _Living_Essentials_homeState extends State<Living_Essentials_home> {
                                                     builder: (context) {
                                                   switch (index) {
                                                     case 0:
-                                                      return const FoodPage();
+                                                      return const HomeScreen();
                                                     case 1:
-                                                      return const LivingEssentials();
+                                                      return const Living_Essentials_home();
+
                                                     case 2:
-                                                      return const LivingGenerals();
+                                                      return const Living_Essentials_home();
                                                     case 3:
-                                                      return const Cervices();
+                                                      return const Living_Essentials_home();
                                                     case 4:
-                                                      return const VoncIoScreens();
+                                                      return const Living_Essentials_home();
                                                     default:
                                                       return const HomeScreen();
                                                   }
@@ -740,3 +772,4 @@ class _Living_Essentials_homeState extends State<Living_Essentials_home> {
 }
 
 enum VeiwType { grid, list }
+

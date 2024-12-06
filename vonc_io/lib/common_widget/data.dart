@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 class AppData {
-  AppData._();
+  AppData.init();
 
   static final List<String> innerStyleImages = [
     "assets/img/vonc_main_banner.jpg",
     "assets/img/vonc food banner.png",
     "assets/img/Green And Gold Overlay Fresh Foods Email Header.png",
     "assets/img/Fashion Sale Landscape Banner.png",
-    "assets/img/VOnc_Mechanic Shop Services Banner.png",
+    "assets/img/cevices/VONC CAR CERVICES-min.png",
+    "assets/icons/food .png",
   ];
 
   static final List<String> CategoriesStyleImages = [

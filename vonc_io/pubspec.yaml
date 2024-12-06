@@ -39,10 +39,13 @@ dependencies:
   pinput: ^5.0.0
   http: ^1.2.2
   curved_navigation_bar: ^1.0.6
-  flutter_launcher_icons: ^0.14.1
+  # flutter_launcher_icons: ^0.14.1
   country_picker: ^2.0.26
   carousel_slider: ^5.0.0
   fab_circular_menu_plus: ^0.0.2
+  firebase_core: ^3.8.1
+  firebase_auth: ^5.3.4
+  cloud_firestore: ^5.5.1
 
 dev_dependencies:
   flutter_test:
@@ -55,26 +58,26 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
 
-flutter_launcher_icons:
-  android: true
-  ios: true
-  remove_alpha_ios: true
-  image_path: "assets/icons/vonc_app_logo.png"
-  min_sdk_android: 21 # android min sdk min:16, default 21
-  adaptive_icon_background: "#000000"
-  adaptive_icon_foreground: "assets/icons/vonc_app_logo.png"
-  web:
-    generate: true
-    image_path: "assets/icons/vonc_app_logo.png"
-    background_color: "#hexcode"
-    theme_color: "#hexcode"
-  windows:
-    generate: true
-    image_path: "assets/icons/vonc_app_logo.png"
-    icon_size: 80 # min:48, max:256, default: 48
-  macos:
-    generate: true
-    image_path: "assets/icons/vonc_app_logo.png"
+# flutter_launcher_icons:
+#   android: true
+#   ios: true
+#   remove_alpha_ios: true
+#   image_path: "assets/icons/vonc_app_logo.png"
+#   min_sdk_android: 21 # android min sdk min:16, default 21
+#   adaptive_icon_background: "#000000"
+#   adaptive_icon_foreground: "assets/icons/vonc_app_logo.png"
+#   web:
+#     generate: true
+#     image_path: "assets/icons/vonc_app_logo.png"
+#     background_color: "#hexcode"
+#     theme_color: "#hexcode"
+#   windows:
+#     generate: true
+#     image_path: "assets/icons/vonc_app_logo.png"
+#     icon_size: 80 # min:48, max:256, default: 48
+#   macos:
+#     generate: true
+#     image_path: "assets/icons/vonc_app_logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
