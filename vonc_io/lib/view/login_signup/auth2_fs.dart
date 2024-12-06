@@ -11,7 +11,6 @@ class AuthenticationService {
     required String email,
     required String password,
     required String confirmPassword,
-    required AuthenticationService authService,
   }) async {
     String res = "Some error occurred";
     try {
@@ -25,17 +24,13 @@ class AuthenticationService {
         }
 
         // Create user with email and password
-        UserCredential cred =
-            await authService._auth.createUserWithEmailAndPassword(
+        UserCredential cred = await _auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
 
         // Store user information in Firestore
-        await authService._firestore
-            .collection('users')
-            .doc(cred.user!.uid)
-            .set({
+        await _firestore.collection('users').doc(cred.user!.uid).set({
           'id': cred.user!.uid,
           'email': email,
         });

@@ -863,7 +863,6 @@ class _Email_Password_Verifiction_ScreenState
         email: emailController.text,
         password: passwordController.text,
         confirmPassword: passwordController.text,
-        authService: AuthenticationService(),
       );
 
       print("Sign Up Response: $res"); // Debugging output
