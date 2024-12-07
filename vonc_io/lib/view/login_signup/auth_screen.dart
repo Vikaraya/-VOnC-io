@@ -4,6 +4,8 @@ import 'package:pinput/pinput.dart';
 import 'package:vonc_io/models/api_service.dart';
 import 'package:vonc_io/view/login_signup/auth2_fs.dart';
 import 'package:vonc_io/view/pages/vonc_main_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -815,6 +817,10 @@ class _Email_Password_Verifiction_ScreenState
   //     );
   //   }
   // }
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   void signIn() async {
     // Validate input
     if (emailController.text.isEmpty || passwordController.text.isEmpty) {
@@ -858,41 +864,51 @@ class _Email_Password_Verifiction_ScreenState
   }
 
   void signUp() async {
+    // setState(() {
+    //   isLoading = true;
+    // });
+
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+    String confirmPassword = confirmPasswordController.text.trim();
+
+
+    //uncomment chesi try chey bro and loading not working
+    // if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(content: Text('All fields are required.')),
+    //   );
+    //   return;
+    // }
+
+    // if (password != confirmPassword) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(content: Text('Passwords do not match.')),
+    //   );
+    //   return;
+    // }
+
     try {
-      String res = await AuthenticationService().signUp(
-        email: emailController.text,
-        password: passwordController.text,
-        confirmPassword: passwordController.text,
+      UserCredential cred = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
       );
 
-      print("Sign Up Response: $res"); // Debugging output
-
-      if (res == "success") {
-        setState(() {
-          isLoading = true; // Optionally show a loading indicator
-        });
-
-        print("Navigating to PhoneVerification..."); // Debugging output
-
-        // Navigate to the next screen
-        await Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const PhoneVerification()),
-        );
-      } else {
-        setState(() {
-          isLoading = false; // Hide loading indicator
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(res)), // Show error message
-        );
-      }
-    } catch (e) {
-      setState(() {
-        isLoading = false; // Hide loading indicator
-      });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("An error occurred: $e")), // Show error message
+        const SnackBar(content: Text('User created successfully!')),
+      );
+
+      //actually its wrong usage in here to navigate bro idhi down place chesthe navigate not working.
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const VoncMainScreen())); 
+
+      await _firestore.collection('users').doc(cred.user!.uid).set({
+          'id': cred.user!.uid,
+          'email': email,
+        });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
       );
     }
   }
@@ -1044,7 +1060,7 @@ class _Email_Password_Verifiction_ScreenState
                                           color: Colors.black,
                                         ),
                                         decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.symmetric(
+                                          contentPadding: const EdgeInsets.symmetric(
                                               vertical: 6, horizontal: 6),
                                           filled: true,
                                           fillColor: Colors.grey.shade500,
