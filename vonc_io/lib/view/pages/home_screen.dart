@@ -137,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             Container(
-                height: MediaQuery.of(context).size.height * 0.35,
+                height: MediaQuery.of(context).size.height * 0.3,
                 margin: EdgeInsets.all(10),
                 child: Stack(
                   children: [
